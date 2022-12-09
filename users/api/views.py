@@ -1,8 +1,9 @@
-from .serializers import RegistrationSerializer,SetPasswordSerializer,LoginUserSerializer, VerifyOTPSerializer,ResetPasswordSerializer,ResetPasswordConfirmView
+from .serializers import RegistrationSerializer,SetPasswordSerializer,LoginUserSerializer, VerifyOTPSerializer,ResetPasswordSerializer,ResetPasswordConfirmView,UpdateProfileSerializer
 from rest_framework import generics,status
 from rest_framework.views import APIView
 from rest_framework import permissions
 from rest_framework import status
+from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
@@ -11,6 +12,16 @@ from users.emails import phone_or_mail
 from users.models import User
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.throttling import ScopedRateThrottle
+
+
+usr = get_user_model()
+
+class UpdateProfileView(generics.RetrieveUpdateAPIView):
+    serializer_class = UpdateProfileSerializer
+    queryset = usr.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+    def get_object(self):
+        return self.request.user
 
 
 class LoginUserView(generics.GenericAPIView):

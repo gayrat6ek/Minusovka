@@ -2,9 +2,16 @@ from users.models import User
 from rest_framework import serializers
 # from rest_framework_simplejwt.serializers import TokenRefreshView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from users.models import User as user
 from rest_framework_simplejwt.tokens import AccessToken,RefreshToken
 
+
+class UpdateProfileSerializer(serializers.ModelSerializer):
+    email = serializers.CharField(read_only=True)
+    class Meta:
+        model=User
+        fields = ['email','first_name','last_name','gender','image','birth_date']
+    def update(self, instance, validated_data):
+        return super().update(instance, validated_data)
 
 
 class LoginUserSerializer(serializers.Serializer):

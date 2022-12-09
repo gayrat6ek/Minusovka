@@ -17,7 +17,8 @@ class MusicView(generics.CreateAPIView):
         data = History.objects.filter(user=self.request.user).order_by('-time_created')[:1]
         serializer = HistorySerializer(data, many=True)
         print(serializer.data[0]['accompaniment'])
-        return Response({'Minus':serializer.data[0],'success':True}, status=status.HTTP_201_CREATED)
+        serializer.data[0] = serializer.data[0].pop('music')
+        return Response({'minus':serializer.data[0],'success':True}, status=status.HTTP_200_OK)
 class MinusView(generics.ListAPIView):
     queryset = Minus.objects.all()
     serializer_class = MinusSerializer

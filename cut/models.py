@@ -6,3 +6,8 @@ class CutMusic(models.Model):
     cutted_music= models.FileField(max_length=255,null=True,blank=True)
     time_from = models.BigIntegerField(null=True,blank=True,default=0)
     time_to = models.BigIntegerField(null=True,blank=True,default=30000)
+class JoinMusic(models.Model):
+    first_music = models.FileField(upload_to='documents/%Y/%m/%d')
+    second_music = models.FileField(upload_to='documents/%Y/%m/%d')
+    mixed_music = models.FileField(null=True,blank=True)
+    
