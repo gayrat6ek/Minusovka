@@ -4,7 +4,7 @@ def qoshiqtext(filepath):
     file = open(filepath,'rb').read()
     info = Shazam(file)
     recognizer = info.recognizeSong()
-    for data in recognizer:
+    for data in recognizer:     
       try:
         name_singer = data[1]['track']['subtitle']
       except:
@@ -21,10 +21,17 @@ def qoshiqtext(filepath):
       except:
         lyrics = None   
         pass
-      break   
+      try:
+        music_img = data[1]['track']['images']['background']
+      except:
+        music_img=None
+        pass
+      break
+
     x = dict({
       'singer':name_singer,
       'song_name':name_song,
       'lyrics':lyrics,
+      'music_img':music_img,
     })
     return x

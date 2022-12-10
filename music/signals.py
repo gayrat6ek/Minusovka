@@ -35,7 +35,8 @@ def makeminus(sender,instance,created,**kwargs):
                 singer_name = singer_name,
                 lyrics = lyrics,
                 vocals = vocals,
-                accompaniment = accompaniment
+                accompaniment = accompaniment,
+                music_img = data_music['music_img'],
             )
             idminus = Minus.objects.filter(singer_name = singer_name ,song_name = song_name)
             History.objects.create(

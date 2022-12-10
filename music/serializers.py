@@ -12,7 +12,7 @@ class MinusSerializer(serializers.ModelSerializer):
     musicn = serializers.CharField(source='music.music')
     class Meta:
         model = Minus
-        fields = ['musicn','vocals','accompaniment','singer_name','song_name','lyrics']
+        fields = ['musicn','vocals','accompaniment','singer_name','song_name','lyrics','background']
 
 class HistorySerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
@@ -22,6 +22,8 @@ class HistorySerializer(serializers.ModelSerializer):
     singer_name = serializers.CharField(source = 'minus.singer_name')
     song_name = serializers.CharField(source='minus.song_name')
     lyrics = serializers.CharField(source='minus.lyrics')
+    background = serializers.FileField(source='minus.background')
+    music_img = serializers.CharField(source='minus.music_img')
     class Meta:
         model = History
-        fields = ['music','vocals','user','accompaniment','singer_name','song_name','lyrics']
+        fields = ['music','vocals','user','accompaniment','singer_name','song_name','lyrics','background','music_img']
