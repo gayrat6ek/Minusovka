@@ -29,6 +29,16 @@ def makeminus(sender,instance,created,**kwargs):
             lyrics = data_music['lyrics']
             vocals = f"media/output/{filename}/vocals.mp3"
             accompaniment = f"media/output/{filename}/accompaniment.mp3"
+            if data_music['music_img'] is None:
+                Minus.objects.create(
+                    music = instance,
+                    song_name = song_name,
+                    singer_name = singer_name,
+                    lyrics = lyrics,
+                    vocals = vocals,
+                    accompaniment = accompaniment,
+                )
+            
             Minus.objects.create(
                 music = instance,
                 song_name = song_name,
@@ -36,7 +46,6 @@ def makeminus(sender,instance,created,**kwargs):
                 lyrics = lyrics,
                 vocals = vocals,
                 accompaniment = accompaniment,
-                music_img = data_music['music_img'],
             )
             idminus = Minus.objects.filter(singer_name = singer_name ,song_name = song_name)
             History.objects.create(
@@ -45,4 +54,4 @@ def makeminus(sender,instance,created,**kwargs):
                 user = instance.user,
             )
         
-        
+    

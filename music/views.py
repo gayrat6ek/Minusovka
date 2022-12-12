@@ -1,4 +1,4 @@
-from .serializers import MusicSerializer,MinusSerializer,HistorySerializer
+from .serializers import MusicSerializer,MinusSerializer,MinusListSerializer,HistorySerializer
 from .models import Minus,Music,History
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics 
@@ -51,6 +51,9 @@ class HistoryView(generics.ListAPIView):
     def get_queryset(self):
         return History.objects.filter(user=self.request.user).order_by('-time_created')[:10]
 
+class MinusListApiView(generics.ListAPIView):
+    queryset = Minus.objects.all()
+    serializer_class = MinusListSerializer
+    def get(self, request, *args, **kwargs):
 
-        
-        
+        return super().get(request, *args, **kwargs)

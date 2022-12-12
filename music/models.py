@@ -17,11 +17,11 @@ class Minus(models.Model):
     accompaniment = models.CharField(max_length=250)
     song_name = models.CharField(max_length=250,null=True,blank=True)
     singer_name = models.CharField(max_length=250,null=True,blank=True)
-    background = models.FileField(upload_to='documents/%Y/%m/%d',default='documents/2022/12/07/default.mp4')
+    background = models.FileField(upload_to='documents/%Y/%m/%d',default='documents/green.mp4')
     user = models.CharField(User,max_length=250)
     lyrics = models.TextField(null=True,blank=True)
     time_created = models.DateTimeField(auto_now_add=True)
-    music_img = models.CharField(max_length=255,default='media/documents/2022/12/07/naushnik.jpg')
+    music_img = models.TextField(default='media/documents/naushnik.jpg')
 
 
 class History(models.Model):

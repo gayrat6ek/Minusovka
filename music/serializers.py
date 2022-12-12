@@ -27,3 +27,9 @@ class HistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = History
         fields = ['music','vocals','user','accompaniment','singer_name','song_name','lyrics','background','music_img']
+
+
+class MinusListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Minus
+        fields = ['vocals','accompaniment','music_img','singer_name','song_name']
