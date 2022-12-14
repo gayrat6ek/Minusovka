@@ -10,4 +10,3 @@ class JoinMusic(models.Model):
     first_music = models.FileField(upload_to='documents/%Y/%m/%d')
     second_music = models.FileField(upload_to='documents/%Y/%m/%d')
     mixed_music = models.FileField(null=True,blank=True)
-    

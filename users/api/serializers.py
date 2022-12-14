@@ -13,6 +13,12 @@ class UpdateProfileSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         return super().update(instance, validated_data)
 
+class GetUserDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=User
+        fields=['email','first_name','last_name','gender','image','birth_date']
+    
+
 
 class LoginUserSerializer(serializers.Serializer):
     email = serializers.CharField(max_length=255)

@@ -1,4 +1,4 @@
-from .serializers import RegistrationSerializer,SetPasswordSerializer,LoginUserSerializer, VerifyOTPSerializer,ResetPasswordSerializer,ResetPasswordConfirmView,UpdateProfileSerializer
+from .serializers import RegistrationSerializer,SetPasswordSerializer,GetUserDataSerializer,LoginUserSerializer, VerifyOTPSerializer,ResetPasswordSerializer,ResetPasswordConfirmView,UpdateProfileSerializer
 from rest_framework import generics,status
 from rest_framework.views import APIView
 from rest_framework import permissions
@@ -20,8 +20,31 @@ class UpdateProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = UpdateProfileSerializer
     queryset = usr.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
+
     def get_object(self):
         return self.request.user
+    def get(self, request, *args, **kwargs):
+        email = self.request.user.email
+        image = self.request.user.image.url
+        first_name = self.request.user.first_name 
+        last_name = self.request.user.last_name 
+        gender = self.request.user.gender
+        birth_date = self.request.user.birth_date
+        return Response({"email":email, "first_name":first_name, "last_name":last_name, "gender":gender, "birth_date":birth_date,'image':image,'success':True})
+    def update(self, request, *args, **kwargs):
+        serializer = UpdateProfileSerializer(request.user,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+        email = self.request.user.email
+        image = self.request.user.image.url
+        first_name = self.request.user.first_name 
+        last_name = self.request.user.last_name 
+        gender = self.request.user.gender
+        birth_date = self.request.user.birth_date
+        return Response({"email":email, "first_name":first_name, "last_name":last_name, "gender":gender, "birth_date":birth_date,'image':image,'success':True})
+
+
+
 
 
 class LoginUserView(generics.GenericAPIView):
@@ -204,6 +227,15 @@ class SetPasswordView(generics.GenericAPIView):
             user.set_password(password1)
             user.save()
         return Response({"Message":'Password set succesful','success':True},status=status.HTTP_200_OK)
+
+
+class GetUserDataView(generics.ListAPIView):
+    serializer_class = GetUserDataSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = User.objects.all()
+    def get(self, request, *args, **kwargs):
+        serializer = GetUserDataSerializer(request.user)
+        return Response({"userdata":serializer.data,'success':True},status=status.HTTP_200_OK)
 
 
 

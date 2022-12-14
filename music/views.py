@@ -1,4 +1,4 @@
-from .serializers import MusicSerializer,MinusSerializer,MinusListSerializer,HistorySerializer
+from .serializers import MusicSerializer,MinusListSerializer,HistorySerializer,KaraokeListSerializer
 from .models import Minus,Music,History
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics 
@@ -42,18 +42,22 @@ class KaraokeView(generics.CreateAPIView):
             'lyrics':serializer.data[0]['lyrics'],
         },'success':True}, status=status.HTTP_200_OK)
 
-class MinusView(generics.ListAPIView):
-    queryset = Minus.objects.all()
-    serializer_class = MinusSerializer
 
 class HistoryView(generics.ListAPIView):
     serializer_class = HistorySerializer
+    permission_classes = [IsAuthenticated]
     def get_queryset(self):
         return History.objects.filter(user=self.request.user).order_by('-time_created')[:10]
 
 class MinusListApiView(generics.ListAPIView):
     queryset = Minus.objects.all()
     serializer_class = MinusListSerializer
+    permission_classes = [IsAuthenticated]
     def get(self, request, *args, **kwargs):
 
         return super().get(request, *args, **kwargs)
+
+class KaraokeListApiView(generics.ListAPIView):
+    queryset = Minus.objects.all()
+    serializer_class = KaraokeListSerializer
+    permission_classes = [IsAuthenticated]
