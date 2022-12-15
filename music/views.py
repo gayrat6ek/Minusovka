@@ -68,6 +68,5 @@ class KaraokeListApiView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
-        print(response.data)
         response.data = {'success': 'True', 'Music_data': response.data,}
         return response
