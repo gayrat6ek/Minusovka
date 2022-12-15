@@ -34,7 +34,7 @@ class KaraokeView(generics.CreateAPIView):
         data = History.objects.filter(user=self.request.user).order_by('-time_created')[:1]
         serializer = HistorySerializer(data, many=True)
         serializer.data[0] = serializer.data[0].pop('music')
-        lyrics = json.loads(serializer.data[0]['lyrics'])
+        lyrics =serializer.data[0]['lyrics']
         return Response({'minus':{
             'accompaniment':serializer.data[0]['accompaniment'],
             'vocals':serializer.data[0]['vocals'],
@@ -68,5 +68,6 @@ class KaraokeListApiView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
+        print(response.data)
         response.data = {'success': 'True', 'Music_data': response.data,}
         return response
