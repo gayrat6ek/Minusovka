@@ -2,6 +2,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import Music,Minus,History
 from .service import qoshiqtext
+import json
+
 from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 import os 
@@ -29,12 +31,13 @@ def makeminus(sender,instance,created,**kwargs):
             lyrics = data_music['lyrics']
             vocals = f"media/output/{filename}/vocals.mp3"
             accompaniment = f"media/output/{filename}/accompaniment.mp3"
+            encoded = json.dumps(lyrics)
             if data_music['music_img'] is None:
                 Minus.objects.create(
                     music = instance,
                     song_name = song_name,
                     singer_name = singer_name,
-                    lyrics = lyrics,
+                    lyrics = encoded,
                     vocals = vocals,
                     accompaniment = accompaniment,
                 )
@@ -52,6 +55,12 @@ def makeminus(sender,instance,created,**kwargs):
             History.objects.create(
                 music=instance,
                 minus = idminus[0],
+                user = instance.user,
+            )
+        else:
+            History.objects.create(
+                music=instance,
+                minus = c[0],
                 user = instance.user,
             )
         

@@ -30,7 +30,7 @@ class UpdateProfileView(generics.RetrieveUpdateAPIView):
         last_name = self.request.user.last_name 
         gender = self.request.user.gender
         birth_date = self.request.user.birth_date
-        return Response({"email":email, "first_name":first_name, "last_name":last_name, "gender":gender, "birth_date":birth_date,'image':image,'success':True})
+        return Response({"email":email, "first_name":first_name, "last_name":last_name, "gender":gender, "birth_date":birth_date,'image':image,'success':True},status=status.HTTP_200_OK)
     def update(self, request, *args, **kwargs):
         serializer = UpdateProfileSerializer(request.user,data=request.data)
         if serializer.is_valid():
@@ -41,7 +41,7 @@ class UpdateProfileView(generics.RetrieveUpdateAPIView):
         last_name = self.request.user.last_name 
         gender = self.request.user.gender
         birth_date = self.request.user.birth_date
-        return Response({"email":email, "first_name":first_name, "last_name":last_name, "gender":gender, "birth_date":birth_date,'image':image,'success':True})
+        return Response({"email":email, "first_name":first_name, "last_name":last_name, "gender":gender, "birth_date":birth_date,'image':image,'success':True},status=status.HTTP_200_OK)
 
 
 
