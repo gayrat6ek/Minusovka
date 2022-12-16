@@ -14,6 +14,12 @@ class MinusSerializer(serializers.ModelSerializer):
         model = Minus
         fields = ['musicn','vocals','accompaniment','singer_name','song_name','lyrics','background']
 
+
+class SearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Minus
+        fields = ['accompaniment','vocals','singer_name','song_name','music_img','background']
+
 class HistorySerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
     music = serializers.CharField(source='music.music')

@@ -24,24 +24,31 @@ class UpdateProfileView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         return self.request.user
     def get(self, request, *args, **kwargs):
-        email = self.request.user.email
-        image = self.request.user.image.url
-        first_name = self.request.user.first_name 
-        last_name = self.request.user.last_name 
-        gender = self.request.user.gender
-        birth_date = self.request.user.birth_date
-        return Response({"email":email, "first_name":first_name, "last_name":last_name, "gender":gender, "birth_date":birth_date,'image':image,'success':True},status=status.HTTP_200_OK)
+        response = super().get(request, *args, **kwargs)
+        response.data = {'success':True,'userdata':response.data}
+        return response
+    #def get(self, request, *args, **kwargs):
+    #    email = self.request.user.email
+    #    image = self.request.user.image.url
+    #    first_name = self.request.user.first_name 
+    #    last_name = self.request.user.last_name 
+    #    gender = self.request.user.gender
+    #    birth_date = self.request.user.birth_date
+    #    return Response({"email":email, "first_name":first_name, "last_name":last_name, "gender":gender, "birth_date":birth_date,'image':image,'success':True},status=status.HTTP_200_OK)
     def update(self, request, *args, **kwargs):
-        serializer = UpdateProfileSerializer(request.user,data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-        email = self.request.user.email
-        image = self.request.user.image.url
-        first_name = self.request.user.first_name 
-        last_name = self.request.user.last_name 
-        gender = self.request.user.gender
-        birth_date = self.request.user.birth_date
-        return Response({"email":email, "first_name":first_name, "last_name":last_name, "gender":gender, "birth_date":birth_date,'image':image,'success':True},status=status.HTTP_200_OK)
+        #serializer = UpdateProfileSerializer(request.user,data=request.data)
+        #if serializer.is_valid():
+        #    serializer.save()
+        #email = self.request.user.email
+        #image = self.request.user.image.url
+        #first_name = self.request.user.first_name 
+        #last_name = self.request.user.last_name 
+        #gender = self.request.user.gender
+        #birth_date = self.request.user.birth_date
+        response = super().update(request, *args, **kwargs)
+        response.data = {"success":True,"userdata":response.data}
+        return response
+
 
 
 

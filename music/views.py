@@ -1,9 +1,10 @@
-from .serializers import MusicSerializer,MinusListSerializer,HistorySerializer,KaraokeListSerializer
+from .serializers import MusicSerializer,MinusListSerializer,HistorySerializer,KaraokeListSerializer,SearchSerializer
 from .models import Minus,Music,History
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics 
 from rest_framework.response import Response
 from rest_framework import status 
+from rest_framework.filters import SearchFilter,OrderingFilter
 import json
 # Create your views here.
 class MusicView(generics.CreateAPIView):
@@ -70,3 +71,11 @@ class KaraokeListApiView(generics.ListAPIView):
         response = super().list(request, *args, **kwargs)
         response.data = {'success': 'True', 'Music_data': response.data,}
         return response
+
+
+class SearchView(generics.ListAPIView):
+    queryset = Minus.objects.all()
+    serializer_class = SearchSerializer
+    filter_backends = (SearchFilter,OrderingFilter)
+    search_fields = ('singer_name','song_name')
+    
