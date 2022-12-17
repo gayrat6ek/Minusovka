@@ -22,6 +22,8 @@ class Minus(models.Model):
     lyrics = models.TextField(null=True,blank=True)
     time_created = models.DateTimeField(auto_now_add=True)
     music_img = models.TextField(default='media/documents/naushnik.jpg')
+    def __str__(self) -> str:
+        return str(f"{self.singer_name} - {self.song_name}")
 
 
 class History(models.Model):
@@ -33,3 +35,18 @@ class History(models.Model):
         return self.user
     class Meta:
         ordering=['-time_created']
+
+
+
+class CategoryName(models.Model):
+    cat = models.CharField(max_length=255)
+    cat_img = models.ImageField(upload_to='documents/%Y/%m/%d')
+    def __str__(self):
+        return str(self.cat)
+
+
+class Category(models.Model):
+    minus = models.OneToOneField(Minus,on_delete=models.PROTECT)
+    genre = models.ForeignKey(CategoryName,on_delete=models.PROTECT)
+    def __str__(self):
+        return str(self.minus)

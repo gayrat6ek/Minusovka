@@ -1,7 +1,9 @@
-from .serializers import MusicSerializer,MinusListSerializer,HistorySerializer,KaraokeListSerializer,SearchSerializer
-from .models import Minus,Music,History
-from rest_framework.permissions import IsAuthenticated
+from .serializers import MusicSerializer,MinusListSerializer,HistorySerializer,KaraokeListSerializer,SearchSerializer,CategorySerializer,CategoryNameListSerializer
+from .models import Minus,Music,History,Category,CategoryName
+from rest_framework.permissions import IsAuthenticated,IsAdminUser
+from rest_framework.pagination import PageNumberPagination
 from rest_framework import generics 
+
 from rest_framework.response import Response
 from rest_framework import status 
 from rest_framework.filters import SearchFilter,OrderingFilter
@@ -60,7 +62,7 @@ class MinusListApiView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
-        response.data = {'success': 'True', 'Music_data': response.data,}
+        response.data = {'success': True, 'Music_data': response.data,}
         return response
 
 class KaraokeListApiView(generics.ListAPIView):
@@ -69,7 +71,7 @@ class KaraokeListApiView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
-        response.data = {'success': 'True', 'Music_data': response.data,}
+        response.data = {'success': True, 'Music_data': response.data,}
         return response
 
 
@@ -78,4 +80,32 @@ class SearchView(generics.ListAPIView):
     serializer_class = SearchSerializer
     filter_backends = (SearchFilter,OrderingFilter)
     search_fields = ('singer_name','song_name')
-    
+    permission_classes = [IsAuthenticated]
+    pagination_class = None
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+        response.data = {'success':True,'data':response.data}
+        return response
+
+
+class CategoryView(generics.ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticated]
+    def get(self, request, *args, **kwargs):
+        serializer = Category.objects.filter(genre=kwargs['id'])
+        serializer = CategorySerializer(data=serializer,many=True)
+        if serializer.is_valid():
+            pass
+        return Response({'success':True,'data':serializer.data})
+
+
+class CategoryNameView(generics.ListAPIView):
+    queryset = CategoryName.objects.all()
+    serializer_class = CategoryNameListSerializer
+    pagination_class = None
+    permission_classes = [IsAuthenticated]
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs) 
+        response.data = {"success":True,'category':response.data}
+        return response

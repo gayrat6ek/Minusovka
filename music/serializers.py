@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Music,Minus,History
+from .models import Music,Minus,History,Category,CategoryName
 
 
 class MusicSerializer(serializers.ModelSerializer):
@@ -44,3 +44,21 @@ class KaraokeListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Minus
         fields = ['vocals','accompaniment','music_img','singer_name','song_name','lyrics','background']
+
+class CategorySerializer(serializers.ModelSerializer):
+    vocals = serializers.CharField(source='minus.vocals')
+    accompaniment = serializers.CharField(source='minus.accompaniment')
+    singer_name = serializers.CharField(source = 'minus.singer_name')
+    song_name = serializers.CharField(source='minus.song_name')
+    lyrics = serializers.CharField(source='minus.lyrics')
+    background = serializers.FileField(source='minus.background')
+    music_img = serializers.CharField(source='minus.music_img')
+    class Meta:
+        model = Category
+        fields = ['genre','vocals','accompaniment','singer_name','song_name','lyrics','background','music_img']
+
+
+class CategoryNameListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CategoryName
+        fields = ['pk','cat','cat_img']
