@@ -10,6 +10,6 @@ urlpatterns = [
     path('minus/list',MinusListApiView.as_view()),
     path('search/list',SearchView.as_view()),
     path('category/<int:id>',CategoryView.as_view()),
-    path('categorya/list',CategoryNameView.as_view()),
+    path('category/',CategoryNameView.as_view()),
 
 ]

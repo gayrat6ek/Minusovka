@@ -1,8 +1,8 @@
 from .serializers import MusicSerializer,MinusListSerializer,HistorySerializer,KaraokeListSerializer,SearchSerializer,CategorySerializer,CategoryNameListSerializer
 from .models import Minus,Music,History,Category,CategoryName
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
-from rest_framework.pagination import PageNumberPagination
 from rest_framework import generics 
+from rest_framework.pagination import PageNumberPagination
 
 from rest_framework.response import Response
 from rest_framework import status 
@@ -25,6 +25,9 @@ class MusicView(generics.CreateAPIView):
         'singer_name':serializer.data[0]['singer_name'],
         'song_name':serializer.data[0]['song_name'],
         'lyrics':serializer.data[0]['lyrics']},'success':True}, status=status.HTTP_200_OK)
+
+
+
 
 class KaraokeView(generics.CreateAPIView):
     queryset = Music.objects.all()
@@ -75,6 +78,7 @@ class KaraokeListApiView(generics.ListAPIView):
         return response
 
 
+
 class SearchView(generics.ListAPIView):
     queryset = Minus.objects.all()
     serializer_class = SearchSerializer
@@ -92,18 +96,24 @@ class CategoryView(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsAuthenticated]
-    def get(self, request, *args, **kwargs):
-        serializer = Category.objects.filter(genre=kwargs['id'])
-        serializer = CategorySerializer(data=serializer,many=True)
-        if serializer.is_valid():
-            pass
-        return Response({'success':True,'data':serializer.data})
+    #def get(self, request, *args, **kwargs):
+    #    serializer = Category.objects.filter(genre=kwargs['id'])
+    #    serializer = CategorySerializer(data=serializer,many=True)
+    #    
+    #    if serializer.is_valid():
+    #        return Response({'success':True,'data':serializer.data})
+    #    return Response({'success':False,"msg":serializer.data})
+    def list(self, request, *args, **kwargs):
+        queryset = Category.objects.filter(genre = kwargs['id'])
+        page = self.paginate_queryset(queryset)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response({'success':True,'music':serializer.data})
 
 
 class CategoryNameView(generics.ListAPIView):
     queryset = CategoryName.objects.all()
     serializer_class = CategoryNameListSerializer
-    pagination_class = None
+    #pagination_class = None
     permission_classes = [IsAuthenticated]
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs) 

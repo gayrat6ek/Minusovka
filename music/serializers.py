@@ -53,6 +53,7 @@ class CategorySerializer(serializers.ModelSerializer):
     lyrics = serializers.CharField(source='minus.lyrics')
     background = serializers.FileField(source='minus.background')
     music_img = serializers.CharField(source='minus.music_img')
+    genre = serializers.CharField(source='genre.cat')
     class Meta:
         model = Category
         fields = ['genre','vocals','accompaniment','singer_name','song_name','lyrics','background','music_img']
