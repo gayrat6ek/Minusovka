@@ -29,6 +29,8 @@ class MusicView(generics.CreateAPIView):
 
 
 
+
+
 class KaraokeView(generics.CreateAPIView):
     queryset = Music.objects.all()
     serializer_class = MusicSerializer
@@ -52,12 +54,6 @@ class KaraokeView(generics.CreateAPIView):
         },'success':True}, status=status.HTTP_200_OK)
 
 
-class HistoryView(generics.ListAPIView):
-    serializer_class = HistorySerializer
-    permission_classes = [IsAuthenticated]
-    def get_queryset(self):
-        return History.objects.filter(user=self.request.user).order_by('-time_created')[:10]
-        
 
 class MinusListApiView(generics.ListAPIView):
     queryset = Minus.objects.all()
@@ -108,6 +104,17 @@ class CategoryView(generics.ListAPIView):
         page = self.paginate_queryset(queryset)
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response({'success':True,'music':serializer.data})
+
+
+class HistoryView(generics.ListAPIView):
+    serializer_class = HistorySerializer
+    permission_classes = [IsAuthenticated]
+    def list(self, request, *args, **kwargs):
+        queryset = History.objects.filter(user=self.request.user).order_by('-time_created')
+        page = self.paginate_queryset(queryset)
+        serializer = self.get_serializer(page,many=True)
+        return self.get_paginated_response({"success":True,'music':serializer.data})
+        
 
 
 class CategoryNameView(generics.ListAPIView):
