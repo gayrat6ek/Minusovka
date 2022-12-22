@@ -1,19 +1,15 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import Music,Minus,History
+from .models import Music,Minus,History,SampleBackground
 from .service import qoshiqtext
 import json
 
 from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 import os 
-from slugify import slugify
+import random
 
-import cyrtranslit
 import re 
-
-def has_cyrillic(text):
-    return bool(re.search('[а-яА-Я]', text))
 
 
 @receiver(post_save,sender=Music)
@@ -23,9 +19,9 @@ def makeminus(sender,instance,created,**kwargs):
        
         file_name = os.path.basename(music)
         filename = os.path.splitext(file_name)[0]
-        print(music)
-
-            
+        background = list(SampleBackground.objects.all())
+        samp = random.sample(background,1)
+        background = samp[0].background
         import pydub
         data_music = qoshiqtext(filepath=f"{BASE_DIR}/media/{music}")
         singer_name = data_music['singer']
@@ -55,6 +51,7 @@ def makeminus(sender,instance,created,**kwargs):
                     lyrics = encoded,
                     vocals = vocals,
                     accompaniment = accompaniment,
+                    background = background,
                 )
             else:
                 Minus.objects.create(
@@ -65,6 +62,7 @@ def makeminus(sender,instance,created,**kwargs):
                     music_img=data_music['music_img'],
                     vocals = vocals,
                     accompaniment = accompaniment,
+                    background = background
                 )
             idminus = Minus.objects.filter(singer_name = singer_name ,song_name = song_name)
             History.objects.create(

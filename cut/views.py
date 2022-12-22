@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .serializers import Cutserializer,MixMusicSerializer
+from .serializers import Cutserializer,MixMusicSerializer,VolumeMixSerializer
 from rest_framework import generics
 from rest_framework import response 
 from rest_framework import status
@@ -35,5 +35,23 @@ class MixMusicView(generics.GenericAPIView):
             if first.endswith('mp3') and second.endswith('mp3'):
                 serializer.save()
                 return response.Response({'success':True,"link":serializer.data['mixed_music']},status=status.HTTP_200_OK)
+
+        return response.Response({"message":'This is not music','success':False},status= status.HTTP_400_BAD_REQUEST)
+
+
+class VolumeMixView(generics.GenericAPIView):
+    serializer_class = VolumeMixSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    def post(self, request, *args, **kwargs):
+        first = request.data['instrumental']
+        second = request.data['vocals']
+        first = str(first)
+        second = str(second)
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            if first.endswith('mp3') and second.endswith('mp3'):
+                serializer.save()
+                return response.Response({'success': True, "link": serializer.data['joined_music']}, status=status.HTTP_200_OK)
+
 
         return response.Response({"message":'This is not music','success':False},status= status.HTTP_400_BAD_REQUEST)

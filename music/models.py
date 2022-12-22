@@ -56,3 +56,8 @@ class UserObject(models.Model):
     minus = models.ForeignKey(Minus,on_delete=models.PROTECT)
     time_created = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+
+class SampleBackground(models.Model):
+    background = models.FileField()

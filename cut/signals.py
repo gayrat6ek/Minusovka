@@ -1,6 +1,6 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import CutMusic,JoinMusic
+from .models import CutMusic,JoinMusic,VolumeMix
 from pydub import AudioSegment
 from pathlib import Path
 import pathlib
@@ -41,5 +41,29 @@ def join_musics(sender,instance,created,**kwargs):
         output.export(f"{BASE_DIR}/media/{folder_name}",format='mp3')
         instance.mixed_music = folder_name
         instance.save()
+
+
+@receiver(post_save, sender=VolumeMix)
+def join_musics(sender, instance, created, **kwargs):
+    if created:
+        first_music = f"{BASE_DIR}{instance.instrumental.url}"
+        second_music = f"{BASE_DIR}{instance.vocals.url}"
+        vocals_percent = instance.vocals_percent
+        instrumental_percent = instance.instrumental_percent
+        sound1 = AudioSegment.from_mp3(first_music)
+        sound2 = AudioSegment.from_mp3(second_music)
+        sound1 = sound1-(70-instrumental_percent*0.7)
+        sound2 = sound2-(70-vocals_percent*0.7)
+        output = sound1.overlay(sound2)
+        file_name = os.path.basename(instance.instrumental.url)
+        folder_name = f"mixed/{file_name}"
+        
+        
+        output.export(f"{BASE_DIR}/media/{folder_name}", format='mp3')
+        instance.joined_music = folder_name
+        instance.save()
+        
+        
+
 
 

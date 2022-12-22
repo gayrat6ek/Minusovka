@@ -10,3 +10,12 @@ class JoinMusic(models.Model):
     first_music = models.FileField(upload_to='documents/%Y/%m/%d')
     second_music = models.FileField(upload_to='documents/%Y/%m/%d')
     mixed_music = models.FileField(null=True,blank=True)
+
+
+
+class VolumeMix(models.Model):
+    instrumental = models.FileField(upload_to='documents/%Y/%m/%d')
+    vocals = models.FileField(upload_to='documents/%Y/%m/%d')
+    vocals_percent = models.IntegerField()
+    instrumental_percent = models.IntegerField()
+    joined_music = models.FileField(null=True,blank=True)

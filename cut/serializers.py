@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CutMusic,JoinMusic
+from .models import CutMusic,JoinMusic,VolumeMix
 
 class Cutserializer(serializers.ModelSerializer):
     cutted_music = serializers.FileField(read_only=True)
@@ -14,3 +14,10 @@ class MixMusicSerializer(serializers.ModelSerializer):
     class Meta:
         model=JoinMusic
         fields = ['first_music','second_music','mixed_music']
+
+
+class VolumeMixSerializer(serializers.ModelSerializer):
+    joined_music = serializers.FileField(read_only=True)
+    class Meta:
+        model = VolumeMix
+        fields = ['instrumental', 'vocals','instrumental_percent', 'vocals_percent', 'joined_music']
