@@ -1,3 +1,5 @@
+import string
+import random
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import CutMusic,JoinMusic,VolumeMix
@@ -18,7 +20,7 @@ def makeminus(sender,instance,created,**kwargs):
         filename = os.path.basename(instance.cutting_music.url)
         filename = f"/media/cutted/{filename}"
         export_url = f"{BASE_DIR}{filename}"
-
+        print(export_url)
         extract.export(export_url, format="mp3")
 
         instance.cutted_music = filename.replace('media','')
@@ -46,16 +48,17 @@ def join_musics(sender,instance,created,**kwargs):
 @receiver(post_save, sender=VolumeMix)
 def join_musics(sender, instance, created, **kwargs):
     if created:
-        first_music = f"{BASE_DIR}{instance.instrumental.url}"
-        second_music = f"{BASE_DIR}{instance.vocals.url}"
+        first_music = f"{BASE_DIR}/{instance.instrumental}"
+        second_music = f"{BASE_DIR}/{instance.vocals}"
         vocals_percent = instance.vocals_percent
         instrumental_percent = instance.instrumental_percent
         sound1 = AudioSegment.from_mp3(first_music)
         sound2 = AudioSegment.from_mp3(second_music)
-        sound1 = sound1-(70-instrumental_percent*0.7)
-        sound2 = sound2-(70-vocals_percent*0.7)
+        sound1 = sound1-(40-instrumental_percent*0.4)
+        sound2 = sound2-(50-vocals_percent*0.4)
         output = sound1.overlay(sound2)
-        file_name = os.path.basename(instance.instrumental.url)
+        file_name = ''.join(random.choices(string.ascii_lowercase, k=20))
+        file_name = f"{file_name}.mp3"
         folder_name = f"mixed/{file_name}"
         
         

@@ -14,8 +14,8 @@ class JoinMusic(models.Model):
 
 
 class VolumeMix(models.Model):
-    instrumental = models.FileField(upload_to='documents/%Y/%m/%d')
-    vocals = models.FileField(upload_to='documents/%Y/%m/%d')
+    instrumental = models.CharField(max_length=255)
+    vocals = models.CharField(max_length=255)
     vocals_percent = models.IntegerField()
     instrumental_percent = models.IntegerField()
     joined_music = models.FileField(null=True,blank=True)
