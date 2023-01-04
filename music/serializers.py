@@ -18,7 +18,10 @@ class MinusSerializer(serializers.ModelSerializer):
 class SearchSerializer(serializers.ModelSerializer):
     class Meta:
         model=Minus
-        fields = ['accompaniment','vocals','singer_name','song_name','music_img','background']
+        fields = ['accompaniment','vocals','singer_name','song_name','music_img','background','lyrics']
+
+
+
 
 class HistorySerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
@@ -40,12 +43,13 @@ class HistorySerializer(serializers.ModelSerializer):
 class MinusListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Minus
-        fields = ['vocals','accompaniment','music_img','singer_name','song_name']
+        fields = ['pk','music_img', 'singer_name', 'song_name', 'duration']
 
 class KaraokeListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Minus
-        fields = ['vocals','accompaniment','music_img','singer_name','song_name','lyrics','background']
+        fields = ['pk','music_img', 'singer_name',
+                  'song_name','duration']
 
 class CategorySerializer(serializers.ModelSerializer):
     vocals = serializers.CharField(source='minus.vocals')
@@ -65,3 +69,9 @@ class CategoryNameListSerializer(serializers.ModelSerializer):
     class Meta:
         model = CategoryName
         fields = ['pk','cat','cat_img']
+
+
+class GetByIdSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Minus
+        fields = ['vocals','accompaniment','singer_name','song_name','lyrics','background','music_img','duration']

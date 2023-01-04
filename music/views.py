@@ -1,4 +1,4 @@
-from .serializers import MusicSerializer,MinusListSerializer,HistorySerializer,KaraokeListSerializer,SearchSerializer,CategorySerializer,CategoryNameListSerializer
+from .serializers import MusicSerializer,MinusListSerializer,HistorySerializer,KaraokeListSerializer,SearchSerializer,CategorySerializer,CategoryNameListSerializer,GetByIdSerializer
 from .models import Minus,Music,History,Category,CategoryName
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from rest_framework import generics 
@@ -79,13 +79,14 @@ class SearchView(generics.ListAPIView):
     queryset = Minus.objects.all()
     serializer_class = SearchSerializer
     filter_backends = (SearchFilter,OrderingFilter)
-    search_fields = ('singer_name','song_name')
+    search_fields = ('minus.singer_name','minus.song_name')
     permission_classes = [IsAuthenticated]
     pagination_class = None
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)
         response.data = {'success':True,'data':response.data}
         return response
+
 
 
 class CategoryView(generics.ListAPIView):
@@ -126,3 +127,12 @@ class CategoryNameView(generics.ListAPIView):
         response = super().list(request, *args, **kwargs) 
         response.data = {"success":True,'category':response.data}
         return response
+
+class GetByIdView(generics.ListAPIView):
+    queryset = Minus.objects.all()
+    serializer_class = GetByIdSerializer
+    permission_classes = [IsAuthenticated]
+    def list(self, request, *args, **kwargs):
+        queryset = Minus.objects.filter(pk = kwargs['pk'])
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({'success':True,'music':serializer.data},status=status.HTTP_200_OK)

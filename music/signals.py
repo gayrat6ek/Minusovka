@@ -3,6 +3,7 @@ from django.dispatch import receiver
 from .models import Music,Minus,History,SampleBackground
 from .service import qoshiqtext
 import json
+from mutagen.mp3 import MP3
 
 from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,6 +31,11 @@ def makeminus(sender,instance,created,**kwargs):
         if c.count()==0:
             filename = os.path.splitext(file_name)[0]
             os.system(f"spleeter separate -p spleeter:2stems -o {BASE_DIR}/media/output {BASE_DIR}/media/{music}")
+            duration_file = f"{BASE_DIR}/media/{music}"
+
+
+            time_of_music = MP3(duration_file)
+            min_vs_second = str(int(time_of_music.info.length/60)) + ':' + str(int(time_of_music.info.length%60))
             sound = pydub.AudioSegment.from_wav(f"{BASE_DIR}/media/output/{filename}/vocals.wav")
             sound.export(f"{BASE_DIR}/media/output/{filename}/vocals.mp3", format="mp3")
             sound = pydub.AudioSegment.from_wav(f"{BASE_DIR}/media/output/{filename}/accompaniment.wav")
@@ -52,6 +58,7 @@ def makeminus(sender,instance,created,**kwargs):
                     vocals = vocals,
                     accompaniment = accompaniment,
                     background = background,
+                    duration = min_vs_second
                 )
             else:
                 Minus.objects.create(
@@ -62,7 +69,8 @@ def makeminus(sender,instance,created,**kwargs):
                     music_img=data_music['music_img'],
                     vocals = vocals,
                     accompaniment = accompaniment,
-                    background = background
+                    background = background,
+                    duration=min_vs_second
                 )
             idminus = Minus.objects.filter(singer_name = singer_name ,song_name = song_name)
             History.objects.create(

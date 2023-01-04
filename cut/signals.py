@@ -20,26 +20,24 @@ def makeminus(sender,instance,created,**kwargs):
         filename = os.path.basename(instance.cutting_music.url)
         filename = f"/media/cutted/{filename}"
         export_url = f"{BASE_DIR}{filename}"
-        print(export_url)
         extract.export(export_url, format="mp3")
-
         instance.cutted_music = filename.replace('media','')
         instance.save()
 
 
 @receiver(post_save,sender=JoinMusic)
-def join_musics(sender,instance,created,**kwargs):
+def join_musics1(sender,instance,created,**kwargs):
     if created:
-        first_music = f"{BASE_DIR}{instance.first_music.url}"
+        first_music = f"{BASE_DIR}{instance.first_music}"
         second_music = f"{BASE_DIR}{instance.second_music.url}"
 
         sound1 = AudioSegment.from_mp3(first_music)
         sound2 = AudioSegment.from_mp3(second_music)
         output = sound1.overlay(sound2)
 
-        file_name = os.path.basename(instance.first_music.url)
+        file_name = ''.join(random.choices(string.ascii_lowercase, k=20))
+        file_name = f"{file_name}.mp3"
         folder_name = f"mixed/{file_name}"
-        print(folder_name)
         output.export(f"{BASE_DIR}/media/{folder_name}",format='mp3')
         instance.mixed_music = folder_name
         instance.save()

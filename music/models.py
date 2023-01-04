@@ -22,6 +22,7 @@ class Minus(models.Model):
     lyrics = models.TextField(null=True,blank=True)
     time_created = models.DateTimeField(auto_now_add=True)
     music_img = models.TextField(default='media/documents/naushnik.jpg')
+    duration = models.CharField(max_length=20)
     def __str__(self):
         return str(f"{self.singer_name} - {self.song_name}")
 
