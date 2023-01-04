@@ -43,26 +43,22 @@ class HistorySerializer(serializers.ModelSerializer):
 class MinusListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Minus
-        fields = ['pk','music_img', 'singer_name', 'song_name', 'duration']
+        fields = ['pk','vocals', 'accompaniment', 'singer_name', 'song_name', 'lyrics', 'background', 'music_img']
 
 class KaraokeListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Minus
-        fields = ['pk','music_img', 'singer_name',
-                  'song_name','duration']
+        fields = ['pk','vocals', 'accompaniment', 'singer_name', 'song_name', 'lyrics', 'background', 'music_img']
 
 class CategorySerializer(serializers.ModelSerializer):
-    vocals = serializers.CharField(source='minus.vocals')
-    accompaniment = serializers.CharField(source='minus.accompaniment')
     singer_name = serializers.CharField(source = 'minus.singer_name')
     song_name = serializers.CharField(source='minus.song_name')
-    lyrics = serializers.CharField(source='minus.lyrics')
-    background = serializers.FileField(source='minus.background')
     music_img = serializers.CharField(source='minus.music_img')
     genre = serializers.CharField(source='genre.cat')
+    duration = serializers.CharField(source = 'minus.duration')
     class Meta:
         model = Category
-        fields = ['genre','vocals','accompaniment','singer_name','song_name','lyrics','background','music_img']
+        fields = ['genre', 'singer_name', 'song_name', 'music_img', 'duration']
 
 
 class CategoryNameListSerializer(serializers.ModelSerializer):
